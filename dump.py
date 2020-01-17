@@ -2,7 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 
+tag = sys.argv[1] if len(sys.argv)>=2 else "default"
+path_to_logs = sys.argv[2] if len(sys.argv)==3 else "output/log"
+print "Searching tag '" + tag + "' in " + path_to_logs
 
 eras = ["2016", "2017", "2018", "combined"]
 channels = ["em", "et", "mt", "tt", "cmb"]
@@ -32,8 +36,8 @@ for era in eras:
     for channel in channels:
         fitresults[era][channel] = {}
         for stage in stages:
-            if os.path.isfile("logfiles/signal-strength-%s-default-%s-%s.log"%(era, channel, stage)):
-                with open("logfiles/signal-strength-%s-default-%s-%s.log"%(era, channel, stage)) as infile:
+            if os.path.isfile(os.path.join(path_to_logs, "signal-strength-%s-%s-%s-%s.log"%(era, tag, channel, stage))):
+                with open(os.path.join(path_to_logs, "signal-strength-%s-%s-%s-%s.log"%(era, tag, channel, stage))) as infile:
                     lines=infile.read()
                 lines=lines.split("\n")
                 for line in lines:
@@ -45,6 +49,11 @@ for era in eras:
                         fitresults[era][channel][keys[0]]=["{:.2f}".format(nom), "+{:.2f}".format(up), "{:.2f}".format(down)]
             else:
                 for POI in POIdict[stage]:
+                    fitresults[era][channel][POI]=["", "", ""]
+            #check completeness
+            for POI in POIdict[stage]:
+                if not POI in fitresults[era][channel]:
+                    print "WARNING %s fit seems to be corrupt!"%POI
                     fitresults[era][channel][POI]=["", "", ""]
 
 #write latex file
