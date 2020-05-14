@@ -192,7 +192,7 @@ processlabels = {
 
 f=open("datacard_yields.tex", "w")
 f.write("\documentclass{article}\n\usepackage[hscale=0.7,vscale=0.8]{geometry}\n\usepackage{mathtools}\n\\begin{document}\n")
-ind = False
+ind=False
 for channel in channels:
     if stage!="stxs_stage1p1":
         f.write("\\begin{table}[!h]\n\\begin{center}{\\tiny\n\\begin{tabular}{cc|cc|cc|cc}\n")
@@ -209,9 +209,8 @@ for channel in channels:
             f.write("& %s & %s\\\\\n"%(processlabels[process], valuesstring))
         f.write("\hline\n")
         if stage=="stxs_stage1p1":
-            f.write("\\end{tabular}\n} % end tiny\n\\end{center}\n\caption{Datacard event contents in the "+channellables[channel]+" channel for the "+("stage1 training" if stage=="stage1p1" else "stage0 training")+", "+cat.replace("_","\\_")+" category}\n\\end{table}\n%s"%("\\clearpage\n" if ind else ""))
-            ind = not ind
+            f.write("\\end{tabular}\n} % end tiny\n\\end{center}\n\caption{Datacard event contents in the "+channellables[channel]+" channel for the "+("stage1 training" if stage=="stage1p1" else "stage0 training")+", "+cat.replace("_","\\_")+" category}\n\\end{table}\n\\newpage\n")
     if stage!="stxs_stage1p1":
-        f.write("\\end{tabular}\n} % end tiny\n\\end{center}\n\caption{Datacard event contents in the "+channellables[channel]+" channel for the "+("stage1 training" if stage=="stage1p1" else "stage0 training")+"}\n\\end{table}\n\\clearpage\n")
+        f.write("\\end{tabular}\n\} % end tiny\n\\end{center}\n\caption{Datacard event contents in the "+channellables[channel]+" channel for the "+("stage1 training" if stage=="stage1p1" else "stage0 training")+"}\n\\end{table}\n\\newpage\n")
 f.write("\\end{document}")
 f.close()
