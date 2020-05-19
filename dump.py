@@ -17,7 +17,8 @@ POIdict = {
     "stxs_stage0" : ["r_ggH", "r_qqH"],
     "stxs_stage1p1" : ["r_ggH_GG2H_0J_PTH_0_10",
                        "r_ggH_GG2H_0J_PTH_GT10",
-                       "r_ggH_GG2H_PTH_GT200",
+                       "r_ggH_GG2H_PTH_200_300",
+                       "r_ggH_GG2H_PTH_GT300",
                        "r_ggH_GG2H_1J_PTH_0_60",
                        "r_ggH_GG2H_1J_PTH_60_120",
                        "r_ggH_GG2H_1J_PTH_120_200",
@@ -46,7 +47,12 @@ for era in eras:
                 for line in lines:
                     keys = [key for key in line.split() if key!=""]
                     if len(keys)>4 and keys[0] in POIdict[stage]:
-                        nom = float(keys[2])
+                        try:
+                            nom = float(keys[2])
+                        except ValueError:
+                            print "Can't convert following line:"
+                            print line
+                            raise Exception                            
                         down = float(keys[3].split("/")[0])
                         up = float(keys[3].split("/")[1])
                         fitresults[era][channel][keys[0]]=["{:.2f}".format(nom), "+{:.2f}".format(up), "{:.2f}".format(down)]
@@ -112,8 +118,11 @@ for era in eras:
     f.write("$\ge2$ jets, $p_T^{H}\in[0,\,200]\,\mathrm{GeV}$                                               & $")
     f.write("%s\\substack{%s \\\\ %s}$\\\\\n"%(fitresults[era][channel]["r_ggH_GG2H_GE2J"][0], fitresults[era][channel]["r_ggH_GG2H_GE2J"][1], fitresults[era][channel]["r_ggH_GG2H_GE2J"][2]))
     
-    f.write("$p_T^{H}>\,200\,\mathrm{GeV}$                                                                  & $")
-    f.write("%s\\substack{%s \\\\ %s}$\\\\\n"%(fitresults[era][channel]["r_ggH_GG2H_PTH_GT200"][0], fitresults[era][channel]["r_ggH_GG2H_PTH_GT200"][1], fitresults[era][channel]["r_ggH_GG2H_PTH_GT200"][2]))
+    f.write("$p_T^{H}\in[200,\,300]\,\mathrm{GeV}$                                                          & $")
+    f.write("%s\\substack{%s \\\\ %s}$\\\\\n"%(fitresults[era][channel]["r_ggH_GG2H_PTH_200_300"][0], fitresults[era][channel]["r_ggH_GG2H_PTH_200_300"][1], fitresults[era][channel]["r_ggH_GG2H_PTH_200_300"][2]))
+
+    f.write("$p_T^{H}>\,300\,\mathrm{GeV}$                                                                  & $")
+    f.write("%s\\substack{%s \\\\ %s}$\\\\\n"%(fitresults[era][channel]["r_ggH_GG2H_PTH_GT300"][0], fitresults[era][channel]["r_ggH_GG2H_PTH_GT300"][1], fitresults[era][channel]["r_ggH_GG2H_PTH_GT300"][2]))
     
     f.write("\hline\n\\end{tabular}\n} % end footnotesize\n\\end{center}\n\caption{Signal strength per STXS stage 1 category, combining the measurements of "+era.replace("combined", "2016, 2017, 2018")+" in all channels.}\n\\end{table}\n")
 f.write("\\end{document}")
